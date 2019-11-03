@@ -1,7 +1,8 @@
 import React,{useEffect, useState} from 'react'
 import {Subject, from,interval,fromEvent, of} from 'rxjs'
 import {multicast, flatMap, map, refCount} from 'rxjs/operators'
-import { makePublicRouterInstance } from 'next/dist/client/router'
+import Router from 'next/router'
+
 
 import Test from '../component/Test'
 const index = ()=>{
@@ -98,6 +99,9 @@ const index = ()=>{
     const addArr = ()=>{
         setArr([...arr, 6])
     }
+    const moveToNext = ()=>{
+        Router.push('/second')
+    }
     return(
         <div>
             <button onClick = {firstExample}>처음 예제</button>
@@ -109,6 +113,7 @@ const index = ()=>{
 
             <button onClick = {addArr}>배열늘려버리기</button>
             <Test el = {3}/>
+            <button onClick = {moveToNext}> 다음예제로</button>
         </div>
     )
 }

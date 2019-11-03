@@ -21389,8 +21389,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
-/* harmony import */ var next_dist_client_router__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! next/dist/client/router */ "./node_modules/next/dist/client/router.js");
-/* harmony import */ var next_dist_client_router__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(next_dist_client_router__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! next/router */ "./node_modules/next/dist/client/router.js");
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _component_Test__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../component/Test */ "./component/Test.js");
 
 
@@ -21517,6 +21517,10 @@ var index = function index() {
     setArr([].concat(Object(_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_2__["default"])(arr), [6]));
   };
 
+  var moveToNext = function moveToNext() {
+    next_router__WEBPACK_IMPORTED_MODULE_6___default.a.push('/second');
+  };
+
   return __jsx("div", null, __jsx("button", {
     onClick: firstExample
   }, "\uCC98\uC74C \uC608\uC81C"), __jsx("button", {
@@ -21527,7 +21531,9 @@ var index = function index() {
     onClick: addArr
   }, "\uBC30\uC5F4\uB298\uB824\uBC84\uB9AC\uAE30"), __jsx(_component_Test__WEBPACK_IMPORTED_MODULE_7__["default"], {
     el: 3
-  }));
+  }), __jsx("button", {
+    onClick: moveToNext
+  }, " \uB2E4\uC74C\uC608\uC81C\uB85C"));
 };
 
 index.getInitialProps =
