@@ -102,6 +102,9 @@ const index = ()=>{
     const moveToNext = ()=>{
         Router.push('/second')
     }
+    const moveToRedux = ()=>{
+        Router.push('/third')
+    }
     return(
         <div>
             <button onClick = {firstExample}>처음 예제</button>
@@ -113,7 +116,8 @@ const index = ()=>{
 
             <button onClick = {addArr}>배열늘려버리기</button>
             <Test el = {3}/>
-            <button onClick = {moveToNext}> 다음예제로</button>
+            <button onClick = {moveToNext}>Rx예제</button>
+            <button onClick = {moveToRedux}>redux 예제</button>
         </div>
     )
 }
