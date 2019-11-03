@@ -1,0 +1,15 @@
+{
+  "name": "rxjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lesson.js",
+  "scripts": {
+    "dev" : "next",
+    "build" : "next build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^16.10.2"
+  }
+}
