@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -110,6 +110,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs */ "rxjs");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(rxjs__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! axios */ "axios");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ "rxjs/operators");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__);
 
 
 
@@ -117,60 +121,95 @@ var __jsx = react__WEBPACK_IMPORTED_MODULE_3___default.a.createElement;
 
 
 
+ // const withObservableStream = (observable, triggers, initialState)=>Component=>{
+//     return class extends React.Component{
+//         constructor(props){
+//             super(props);
+//             this.state = {
+//                 ...initialState
+//             }
+//         }
+//         componentDidMount(){
+//             this.subscription = observable.subscribe(newState=>
+//                 this.setState({...newState}),
+//                 );
+//         }
+//         componentWillUnmount(){
+//             this.subscription.unsubscribe();
+//         }
+//         render(){
+//             console.log(this.props)
+//             return(
+//                 <Component {...this.state} {...triggers}/>
+//             )
+//         }
+//     }
+// }
+
 const withObservableStream = (observable, triggers, initialState) => Component => {
-  return class extends react__WEBPACK_IMPORTED_MODULE_3___default.a.Component {
-    constructor(props) {
-      super(props);
-      this.state = Object(_babel_runtime_corejs2_helpers_esm_objectSpread__WEBPACK_IMPORTED_MODULE_2__["default"])({}, initialState);
-    }
-
-    componentDidMount() {
-      this.subscription = observable.subscribe(newState => this.setState(Object(_babel_runtime_corejs2_helpers_esm_objectSpread__WEBPACK_IMPORTED_MODULE_2__["default"])({}, newState)));
-    }
-
-    componentWillUnmount() {
-      this.subscription.unsubscribe();
-    }
-
-    render() {
-      console.log(this.props);
-      return __jsx(Component, Object(_babel_runtime_corejs2_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1__["default"])({}, this.props, this.state, triggers));
-    }
-
+  return () => {
+    const {
+      0: state,
+      1: setState
+    } = Object(react__WEBPACK_IMPORTED_MODULE_3__["useState"])(initialState);
+    let subscription;
+    console.log(state);
+    Object(react__WEBPACK_IMPORTED_MODULE_3__["useEffect"])(() => {
+      subscription = observable.subscribe(newState => setState(Object(_babel_runtime_corejs2_helpers_esm_objectSpread__WEBPACK_IMPORTED_MODULE_2__["default"])({}, newState)));
+    }, []);
+    return __jsx(Component, Object(_babel_runtime_corejs2_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_1__["default"])({}, state, triggers, observable));
   };
 };
 
 const SUBJECT = {
-  POPULARITY: "키워드검색",
-  DATE: "날짜검색"
+  POPULARITY: 'search',
+  DATE: 'search_by_date'
 };
 
 const App = ({
   query = '',
   subject,
+  stories = [],
   onChangeQuery,
   onSelectSubject
 }) => {
+  const onChange = event => {
+    onChangeQuery(event.target.value);
+  };
+
+  Object(react__WEBPACK_IMPORTED_MODULE_3__["useEffect"])(() => {}, []);
   return __jsx("div", null, __jsx("h1", null, "React \uB7FD\uB7FD\uB7FD Rxjs"), __jsx("input", {
     type: "text",
     value: query,
-    onChange: event => onChangeQuery(event.target.value)
+    onChange: onChange
   }), __jsx("div", null, _babel_runtime_corejs2_core_js_object_values__WEBPACK_IMPORTED_MODULE_0___default()(SUBJECT).map(value => __jsx("button", {
     key: value,
     onClick: () => onSelectSubject(value),
     type: "button"
-  }, value))), __jsx("p", null, `쿼리에 담긴 값은 ${query}`));
+  }, value))), __jsx("ul", null, stories.map(story => __jsx("li", {
+    key: story.objectID
+  }, __jsx("a", {
+    href: story.url || story.stoty_url
+  }, story.title || story.story_title)))), __jsx("p", null, `쿼리에 담긴 값은 ${query} 서치는:  ${subject}`));
 };
 
-const query$ = new rxjs__WEBPACK_IMPORTED_MODULE_4__["BehaviorSubject"]({
-  query: 'react'
-});
-/* harmony default export */ __webpack_exports__["default"] = (withObservableStream(query$, {
-  onChangeQuery: value => query$.next({
-    query: value
-  })
+const query$ = new rxjs__WEBPACK_IMPORTED_MODULE_4__["BehaviorSubject"]('react'); //observable 생성
+
+const subject$ = new rxjs__WEBPACK_IMPORTED_MODULE_4__["BehaviorSubject"](SUBJECT.POPULARITY);
+const queryForFetch$ = query$.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["debounce"])(() => Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["timer"])(1000)), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["filter"])(query => query !== ''));
+const fetch$ = Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["combineLatest"])(subject$, queryForFetch$).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["flatMap"])(([subject, query]) => axios__WEBPACK_IMPORTED_MODULE_5___default.a.get(`http://hn.algolia.com/api/v1/${subject}?query=${query}`)), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["map"])(result => result.data.hits), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["retry"])(3));
+/* harmony default export */ __webpack_exports__["default"] = (withObservableStream(Object(rxjs__WEBPACK_IMPORTED_MODULE_4__["combineLatest"])(subject$, query$, fetch$, (subject, query, stories) => ({
+  subject,
+  query,
+  stories
+})), {
+  onChangeQuery: value => query$.next(value),
+  //2번째 인자 대응 함수들
+  onSelectSubject: subject => subject$.next(subject)
 }, {
-  query: '라라라라'
+  query: 'react',
+  subject: SUBJECT.POPULARITY,
+  stories: []
 })(App));
 
 /***/ }),
@@ -371,7 +410,7 @@ const second = () => {
 
 /***/ }),
 
-/***/ 5:
+/***/ 3:
 /*!*******************************!*\
   !*** multi ./pages/second.js ***!
   \*******************************/
@@ -380,6 +419,17 @@ const second = () => {
 
 module.exports = __webpack_require__(/*! /Users/kimserver/GitHub/TraB/RxJs/RxJs_Next_js/pages/second.js */"./pages/second.js");
 
+
+/***/ }),
+
+/***/ "axios":
+/*!************************!*\
+  !*** external "axios" ***!
+  \************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("axios");
 
 /***/ }),
 
@@ -468,6 +518,17 @@ module.exports = require("react");
 /***/ (function(module, exports) {
 
 module.exports = require("rxjs");
+
+/***/ }),
+
+/***/ "rxjs/operators":
+/*!*********************************!*\
+  !*** external "rxjs/operators" ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("rxjs/operators");
 
 /***/ })
 
