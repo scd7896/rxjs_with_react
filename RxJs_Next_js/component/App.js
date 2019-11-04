@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import {BehaviorSubject, combineLatest, timer}from'rxjs'
 import axios from 'axios'
 import { flatMap, debounce, filter, map, retry } from 'rxjs/operators'
+import Router from 'next/router'
 
 
 // const withObservableStream = (observable, triggers, initialState)=>Component=>{
@@ -79,6 +80,7 @@ const App = ({query ='',subject,stories = [],onChangeQuery, onSelectSubject})=>{
                 ))}
             </ul>
             <p>{`쿼리에 담긴 값은 ${query} 서치는:  ${subject}`}</p>
+            <button onClick = {()=>Router.back()}>뒤로가기</button>
         </div>
     )
 }

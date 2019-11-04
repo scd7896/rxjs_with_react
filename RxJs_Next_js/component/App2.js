@@ -1,6 +1,7 @@
 import React,{useState, useEffect} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import { GET_POSTS_REQUEST } from '../action';
+import Router  from 'next/router';
 const SUBJECT = {
     POPULARITY: 'search',
     DATE: 'search_by_date',
@@ -39,7 +40,7 @@ const App2 = ()=>{
     return(
         <div>
             <div>
-                <h1>React 럽럽럽 Rxjs</h1>
+                <h1>React 럽럽럽 redux_saga</h1>
                 <input type = "text"
                     value = {query}
                     onChange = {onChange}/>
@@ -61,6 +62,7 @@ const App2 = ()=>{
                 </ul>
                 <p>{`쿼리에 담긴 값은 ${query} 서치는:  ${subject}`}</p>
             </div>
+            <button onClick = {()=> Router.back()}>뒤로가기</button>
         </div>
     )
 }
